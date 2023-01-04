@@ -1,0 +1,14 @@
+{
+  "name": "ftm-crawling-suite",
+  "version": "1.0.0",
+  "description": "* Must have the latest version of Python installed * Must have installed Docker",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy-api": "",
+    "deploy-crawler": ""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
