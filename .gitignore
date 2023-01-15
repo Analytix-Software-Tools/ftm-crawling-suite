@@ -5,3 +5,4 @@
 crawling-suite/venv/*
 crawling-suite/data/*
 api/venv/*
+crawling-suite/venv
