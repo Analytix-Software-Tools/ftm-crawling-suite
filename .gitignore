@@ -1,6 +1,9 @@
 # Ignore environment files
 .env
 
+# Ignore user-specific settings
+.idea
+
 # Ignore temporary/venv files
 crawling-suite/venv/*
 crawling-suite/data/*
