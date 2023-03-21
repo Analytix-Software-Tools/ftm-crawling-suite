@@ -9,3 +9,6 @@ crawling-suite/venv/*
 crawling-suite/data/*
 api/venv/*
 crawling-suite/venv
+
+# Ignore scrapyd process logs
+*.pid

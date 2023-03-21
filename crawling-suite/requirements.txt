@@ -6,4 +6,4 @@ pyquery
 pydotenv
 scrapy
 wheel
-chompjs
+scrapyd

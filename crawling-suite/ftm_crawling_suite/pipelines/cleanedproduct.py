@@ -5,13 +5,7 @@
 
 
 # useful for handling different item types with a single interface
-from itemadapter import ItemAdapter
-from pymongo import MongoClient
-from scrapy.exceptions import DropItem
-import pydotenv
-
-# Initialize the app environment.
-env = pydotenv.Environment()
+from ftm_crawling_suite.db.db import MongoDBSingleton
 
 
 class CleanedProductPipeline:
@@ -23,14 +17,11 @@ class CleanedProductPipeline:
     in the step preceding this in order to properly identify products throughout every step of the
     cleaning process.
     """
-    
 
     def __init__(self) -> None:
         """Initializes the MongoDB singleton class instance.
         """
-        uri_encoded = env['MONGO_URI_PROD_ENCODED'] if env['ENVIRONMENT'] == 'production' else env[
-            'MONGO_URI_DEV_ENCODED']
-        self.db = MongoClient(uri_encoded)
+        self.db = MongoDBSingleton.get_instance()
 
     def process_item(self, item, spider):
         """Process the item. Check if a document using the same supplier ID and dataRef
@@ -38,7 +29,7 @@ class CleanedProductPipeline:
         """
         item_exists = False
         exists = self.db['crawlingagent']['parsed_products'].find_one(
-                {"dataRef": item['dataRef'], "uniqueId": item['uniqueId']})
+            {"dataRef": item['dataRef'], "uniqueId": item['uniqueId']})
         if exists is not None:
             item_exists = True
             self.db['crawlingagent']['parsed_products'].replace_one(

@@ -10,5 +10,13 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crinaldi44/ftm-crawling-suite.git"
+  },
+  "bugs": {
+    "url": "https://github.com/crinaldi44/ftm-crawling-suite/issues"
+  },
+  "homepage": "https://github.com/crinaldi44/ftm-crawling-suite#readme"
 }

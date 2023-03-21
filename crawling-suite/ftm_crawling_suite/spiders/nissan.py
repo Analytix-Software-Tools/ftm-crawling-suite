@@ -15,7 +15,7 @@ class NissanSpider(CrawlSpider):
     custom_settings = {
         'ITEM_PIPELINES': {
             'ftm_crawling_suite.pipelines.rawdataref.RawDataRefPipeline': 100,
-            'ftm_crawling_suite.pipelines.nissan.NissanDataCleaningPipeline': 200,
+            'ftm_crawling_suite.pipelines.nissan.nissan.NissanDataCleaningPipeline': 200,
             'ftm_crawling_suite.pipelines.cleanedproduct.CleanedProductPipeline': 300,
         }
     }
