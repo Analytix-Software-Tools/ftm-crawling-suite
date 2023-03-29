@@ -1,6 +1,12 @@
-from scrapy.spiders import CrawlSpider
+from abc import ABC
 
-class OrganizationUrlsSpider(CrawlSpider):
+import scrapy
+from scrapy.spiders import CrawlSpider
+from ftm_crawling_suite.db.db import MongoDBSingleton
+from scrapy.linkextractors import LinkExtractor
+
+
+class OrganizationUrlsSpider(CrawlSpider, ABC):
     """
     Given the seed website URLs, indexes all URLs from a given website and
     passes to the Mongo pipeline to be stored and scraped.
@@ -16,9 +22,30 @@ class OrganizationUrlsSpider(CrawlSpider):
         }
     }
 
-    def parse_item(self):
+    def __init__(self, **kwargs):
         """
-        Parses a given product from Diffbot.
+        Initialize this spider with an instance of the MongoDB singleton as well as a
+        link extractor.
         """
+        self.db = MongoDBSingleton.get_instance()
+        super().__init__(**kwargs)
+        self.link_extractor = LinkExtractor(unique=True)
 
-        pass
+    def start_requests(self):
+        """
+        Retrieves the URL seed for all organizations that exist.
+        """
+        organizations_collection = self.db.crawlingagent.organizations
+        organizations = organizations_collection.find({"siteUrl": {"$ne": None}, "isDeleted": {"$ne": True}})
+        if len(organizations) == 0:
+            return print("There are no organizations to be fetched.")
+        for organization in organizations:
+            yield scrapy.Request(url=organization["siteUrl"], callback=self.parse_item)
+
+    def parse_item(self, response):
+        """
+        After a request to the seed URL has been made, conduct a link extraction to retrieve
+        all URLs from the site, passing them into a pipeline.
+        """
+        for link in self.link_extractor.extract_links(response):
+            yield scrapy.Request(link.url, callback=self.parse)
