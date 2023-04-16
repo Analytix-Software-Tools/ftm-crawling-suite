@@ -2,7 +2,6 @@ from abc import ABC
 
 import scrapy
 from scrapy.spiders import CrawlSpider
-from ftm_crawling_suite.db.db import MongoDBSingleton
 from scrapy.linkextractors import LinkExtractor
 
 
@@ -15,19 +14,13 @@ class OrganizationUrlsSpider(CrawlSpider):
     allowed_domains = ['www.diffbot.com']
     user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Safari/605.1.15"
     start_urls = ['https://www.carmax.com/cars/all']
-    custom_settings = {
-        'ITEM_PIPELINES': {
-            'ftm_crawling_suite.pipelines.duplicates.FilterDuplicatesPipeline': 100,
-            'ftm_crawling_suite.pipelines.rawdataref.RawDataRefPipeline': 200,
-        }
-    }
 
     def __init__(self, **kwargs):
         """
         Initialize this spider with an instance of the MongoDB singleton as well as a
         link extractor.
         """
-        self.db = MongoDBSingleton.get_instance()
+        # self.db = MongoDBSingleton.get_instance()
         super().__init__(**kwargs)
         self.link_extractor = LinkExtractor(unique=True)
 

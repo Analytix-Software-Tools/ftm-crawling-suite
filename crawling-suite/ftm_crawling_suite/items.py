@@ -35,7 +35,10 @@ class ProductItem(scrapy.Item):
     # The organization the product belongs to.
     organizationName = scrapy.Field()
 
-    # The name.
+    # A reference to the origin of the data.
+    dataReference = scrapy.Field()
+
+    # The name of the item.
     name = scrapy.Field()
 
     # Attribute values of the product which take the form "attributeName" and "attributeValue"

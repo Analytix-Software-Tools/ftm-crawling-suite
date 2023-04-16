@@ -65,9 +65,10 @@ ROBOTSTXT_OBEY = False
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-# ITEM_PIPELINES = {
-#    'ftm_crawling_suite.pipelines.FtmCrawlingSuitePipeline': 100,
-# }
+ITEM_PIPELINES = {
+    'ftm_crawling_suite.pipelines.DataTagPipeline': 100,
+    'ftm_crawling_suite.pipelines.MongoPipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
@@ -92,7 +93,7 @@ ROBOTSTXT_OBEY = False
 
 # Set settings whose default value is deprecated to a future-proof value
 REQUEST_FINGERPRINTER_IMPLEMENTATION = '2.7'
-TWISTED_REACTOR = 'twisted.internet.asyncioreactor.AsyncioSelectorReactor'
+# TWISTED_REACTOR = 'twisted.internet.asyncioreactor.AsyncioSelectorReactor'
 
 # Set the output of crawled data to store it for reference.
 FEED_URI = 'data/%(name)s/%(time)s.json'
@@ -103,6 +104,7 @@ FEED_FORMAT = 'json'
 # Default to the internal docker-compose URI.
 MONGO_URI_ENCODED = os.getenv('MONGO_URI_ENCODED', '')
 MONGO_URI = base64.b64decode(MONGO_URI_ENCODED).decode('utf-8')
+DEFAULT_DATABASE = "analytix"
 
 # TODO: Implement scrapy-redis.
 REDIS_SERVER_URI = ""
