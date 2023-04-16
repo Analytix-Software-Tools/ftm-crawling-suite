@@ -61,6 +61,11 @@ class FtmCrawlingSuiteDownloaderMiddleware:
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
 
+    """
+    The downloader middleware will check against the redis cache to ensure
+    the URL has not already been crawled against.
+    """
+
     @classmethod
     def from_crawler(cls, crawler):
         # This method is used by Scrapy to create your spiders.

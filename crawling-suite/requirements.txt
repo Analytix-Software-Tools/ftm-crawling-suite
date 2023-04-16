@@ -3,7 +3,6 @@ urllib3
 lxml
 apscheduler
 pyquery
-pydotenv
 scrapy
 wheel
-scrapyd
+scrapy-redis

@@ -1,8 +1,19 @@
+.idea
+
 # Ignore environment files
 .env
+venv/*
+venv
+virtualenv
+virtualenv/*
 
 # Ignore user-specific settings
 .idea
+
+# Ignore docker-compose volumes
+mongodb/data/*
+scrapyd/data/*
+scrapydweb/data/*
 
 # Ignore temporary/venv files
 crawling-suite/venv/*

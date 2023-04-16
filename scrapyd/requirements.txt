@@ -1,0 +1,3 @@
+logparser
+pymongo==4.3.3
+scrapy-redis

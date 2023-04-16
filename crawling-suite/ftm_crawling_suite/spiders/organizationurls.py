@@ -6,7 +6,7 @@ from ftm_crawling_suite.db.db import MongoDBSingleton
 from scrapy.linkextractors import LinkExtractor
 
 
-class OrganizationUrlsSpider(CrawlSpider, ABC):
+class OrganizationUrlsSpider(CrawlSpider):
     """
     Given the seed website URLs, indexes all URLs from a given website and
     passes to the Mongo pipeline to be stored and scraped.

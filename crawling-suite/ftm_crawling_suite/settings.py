@@ -1,3 +1,6 @@
+import os
+import base64
+
 # Scrapy settings for ftm_crawling_suite project
 #
 # For simplicity, this file contains only settings considered important or
@@ -96,3 +99,10 @@ FEED_URI = 'data/%(name)s/%(time)s.json'
 
 # By default, format crawled data as JSON.
 FEED_FORMAT = 'json'
+
+# Default to the internal docker-compose URI.
+MONGO_URI_ENCODED = os.getenv('MONGO_URI_ENCODED', '')
+MONGO_URI = base64.b64decode(MONGO_URI_ENCODED).decode('utf-8')
+
+# TODO: Implement scrapy-redis.
+REDIS_SERVER_URI = ""

@@ -1,0 +1,39 @@
+version: "1.0.0"
+services:
+  redis:
+    container_name: "redis-server"
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
+  mongodb:
+    image: "mongo:latest"
+    ports:
+      - "27019:27019"
+    expose:
+      - "27019:27019"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=rootPass
+    volumes:
+      - ./mongodb/data:/data/db
+  scrapydweb:
+    image: "webclient"
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./scrapydweb/data/scrapydweb_data:/usr/local/lib/python3.10/site-packages/scrapydweb/data \
+      - /etc/timezone:/etc/timezone \
+    environment:
+      - USERNAME=scrapydweb
+      - PASSWORD=rootpassword
+  scrapyd:
+    image: "scrapydaemon"
+    ports:
+      - "6800:6800"
+    volumes:
+      - ./scrapyd/data:/var/lib/scrapyd
+      - ./projects:/usr/local/projects
+      - /usr/local/lib/python3.9/dist-packages
+    restart: unless-stopped
+
+

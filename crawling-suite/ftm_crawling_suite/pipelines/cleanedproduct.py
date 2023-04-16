@@ -12,10 +12,6 @@ class CleanedProductPipeline:
     """This pipeline is responsible for storing the cleaned data inside the data pipeline. In most
     cases, the raw data ref will be stored and processed before a cleaning step is initiated, which
     will then pass in Items of type CleanedProduct to this pipeline step.
-    
-    The supplier unique ID of the product should be maintained
-    in the step preceding this in order to properly identify products throughout every step of the
-    cleaning process.
     """
 
     def __init__(self) -> None:

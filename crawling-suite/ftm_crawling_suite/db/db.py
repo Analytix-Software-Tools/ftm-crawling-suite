@@ -1,8 +1,6 @@
 import base64
 import pymongo
-import pydotenv
-
-env = pydotenv.Environment()
+import os
 
 
 class MongoDBSingleton:
@@ -22,7 +20,6 @@ class MongoDBSingleton:
         if MongoDBSingleton.__instance is not None:
             raise Exception("This class is a singleton!")
         else:
-            mongo_uri_encoded = env['MONGO_URI_PROD_ENCODED'] if env['ENVIRONMENT'] == 'production' else env[
-                'MONGO_URI_DEV_ENCODED']
-            # mongo_uri = base64.b64decode(mongo_uri_encoded)
+            mongo_uri_encoded = os.environ.get('MONGO_URI_PROD_ENCODED', 'bW9uZ29kYjovL2xvY2FsaG9zdDoyNzAxOQ==')
+            mongo_uri = base64.b64decode(mongo_uri_encoded).decode('utf-8')
             MongoDBSingleton.__instance = pymongo.MongoClient(mongo_uri_encoded)

@@ -1,0 +1,8 @@
+FROM vimagick/scrapyd
+
+COPY ./scrapyd.conf /etc/scrapyd/
+COPY requirements.txt .
+
+RUN python3 -m pip install -r requirements.txt
+
+ENTRYPOINT ["scrapyd"]

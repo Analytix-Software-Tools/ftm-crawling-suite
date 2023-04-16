@@ -6,7 +6,7 @@
 import scrapy
 
 
-class RawDataRef(scrapy.Item):
+class RawItem(scrapy.Item):
     """Represents a raw item to be stored
     within the database. This is mainly to unify the tagged raw data.
     """
@@ -25,19 +25,7 @@ class RawDataRef(scrapy.Item):
     uniqueId = scrapy.Field()
 
 
-class ProductTypeValidation(scrapy.Item):
-    """
-    Is mapped in-app to provide context and instructions for final cleaning for a given crawled
-    product item. These can be used to assist with prediction of new values.
-    """
-    pid = scrapy.Field()
-
-    supplierProductTypeName = scrapy.Field()
-
-    productTypeAttributeValues = scrapy.Field()
-
-
-class ParsedProduct(scrapy.Item):
+class ProductItem(scrapy.Item):
     """
     Parsed products have been parsed and accepted thru the in-app validation section. They
     are presumably ready to be pushed to the database, however they must be associated with
@@ -57,13 +45,15 @@ class ParsedProduct(scrapy.Item):
     # The image URL.
     imgUrl = scrapy.Field()
 
+    # Description of the item.
     description = scrapy.Field()
 
-    # The PID of the product type.
-    productTypePid = scrapy.Field()
+    # Array of potential product categories. Will need to feed this into a
+    # classification model.
+    productCategories = scrapy.Field()
 
     # The source URL of the product details.
-    source = scrapy.Field()
+    sourceUrl = scrapy.Field()
 
 
 class CleanedProduct(scrapy.Item):
@@ -95,16 +85,3 @@ class CleanedProduct(scrapy.Item):
 
     # A field to store the original ID from the supplier.
     uniqueId = scrapy.Field()
-
-
-class OrganizationUrlMapping:
-    """
-    A mapping of organization to the URLs of that organization.
-    """
-    organizationPid = scrapy.Field()
-
-    urls = scrapy.Field()
-
-    startUrl = scrapy.Field()
-
-    lastCrawledDate = scrapy.Field()
