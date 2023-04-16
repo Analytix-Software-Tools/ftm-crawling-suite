@@ -1,3 +1,5 @@
 logparser
 pymongo==4.3.3
+pyopenssl==22.0.0
+cryptography==38.0.4
 scrapy-redis

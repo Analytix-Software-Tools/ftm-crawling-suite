@@ -17,9 +17,13 @@ scrapydweb/data/*
 
 # Ignore temporary/venv files
 crawling-suite/venv/*
-crawling-suite/data/*
+crawling-suite/data
+crawling-suite/build
 api/venv/*
 crawling-suite/venv
+*.egg
+*.cpython
+__pycache__
 
 # Ignore scrapyd process logs
 *.pid

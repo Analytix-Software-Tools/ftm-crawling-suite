@@ -29,5 +29,5 @@ docker build ./scrapyd -t scrapydaemon
 docker tag scrapydaemon analytixcr/scrapyd
 docker build ./scrapydweb -t webclient
 docker tag webclient analytixcr/scrapydweb
-docker compose up
+docker compose up -d
 ```
