@@ -7,7 +7,7 @@
 # useful for handling different item types with a single interface
 import datetime
 import os
-
+from datetime import datetime
 from itemadapter import ItemAdapter
 from pymongo import MongoClient
 from scrapy.exceptions import DropItem
@@ -66,9 +66,6 @@ class MongoPipeline:
         if not item_exists:
             self.db['crawlingagent'][self.collection_name].insert_one(dict(item))
         return item
-
-import os
-from datetime import datetime
 
 
 class DataTagPipeline:
