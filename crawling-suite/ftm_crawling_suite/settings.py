@@ -102,7 +102,7 @@ FEED_URI = 'data/%(name)s/%(time)s.json'
 FEED_FORMAT = 'json'
 
 # Default to the internal docker-compose URI.
-MONGO_URI_ENCODED = os.getenv('MONGO_URI_ENCODED', 'bW9uZ29kYjovL21vbmdvZGI6MjcwMTk=')
+MONGO_URI_ENCODED = os.getenv('MONGO_URI_ENCODED', 'bW9uZ29kYitzcnY6Ly9hZG1pbjpla3kwUFF5TjNjZDcxV3dZQGNsdXN0ZXIwLmlsbHFoLm1vbmdvZGIubmV0')
 MONGO_URI = base64.b64decode(MONGO_URI_ENCODED).decode('utf-8')
 DEFAULT_DATABASE = "analytix"
 
@@ -160,8 +160,8 @@ ITEM_PIPELINES = {
 
 # Specify the full Redis URL for connecting (optional).
 # If set, this takes precedence over the REDIS_HOST and REDIS_PORT settings.
-REDIS_URL_ENCODED = os.environ.get('REDIS_URI_ENCODED', 'cmVkaXM6Ly9jYWNoZTo2Mzc5')
-REDIS_URL = base64.b64decode(REDIS_URL_ENCODED)
+REDIS_URL_ENCODED = os.environ.get('REDIS_URI_ENCODED', 'cmVkaXM6Ly9jaHJpcy1hZG1pbjpQZ3Y0JWhIZjJHNCFAcmVkaXMtMTgyNTEuYzI0Ni51cy1lYXN0LTEtNC5lYzIuY2xvdWQucmVkaXNsYWJzLmNvbToxODI1MQ==')
+REDIS_URL = base64.b64decode(REDIS_URL_ENCODED).decode('utf-8')
 
 # Custom redis client parameters (i.e.: socket timeout, etc.)
 #REDIS_PARAMS  = {}

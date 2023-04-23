@@ -25,7 +25,23 @@ class RawItem(scrapy.Item):
     uniqueId = scrapy.Field()
 
 
-class ProductItem(scrapy.Item):
+class DataReferenceTag(scrapy.Item):
+    """
+    Stores general information regarding a crawled item, such as the
+    reference of where it was obtained.
+    """
+
+    # The reference ID of the item.
+    dataReferenceId = scrapy.Field()
+
+    # The hostname the item was crawled from.
+    hostname = scrapy.Field()
+
+    # The datetime the item was updated or added.
+    last_updated = scrapy.Field()
+
+
+class ProductItem(DataReferenceTag):
     """
     Parsed products have been parsed and accepted thru the in-app validation section. They
     are presumably ready to be pushed to the database, however they must be associated with
@@ -34,9 +50,6 @@ class ProductItem(scrapy.Item):
 
     # The organization the product belongs to.
     organizationName = scrapy.Field()
-
-    # A reference to the origin of the data.
-    dataReference = scrapy.Field()
 
     # The name of the item.
     name = scrapy.Field()

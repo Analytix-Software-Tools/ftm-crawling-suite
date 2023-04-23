@@ -37,7 +37,8 @@ PASSWORD = os.getenv("PASSWORD", 'admin')
 #   - it's recommended to pass in a tuple of 5 elements.
 #   - e.g. ('', '', '127.0.0.1', '6800', '') or ('username', 'password', 'localhost', '6801', 'group')
 SCRAPYD_SERVERS = [
-    'scrapyd:6800',
+    # 'scrapyd:6800',
+    'analytix-scrapyd-0.azurewebsites.net'
     # 'username:password@localhost:6801#group',
     # ('username', 'password', 'localhost', '6801', 'group'),
 ]

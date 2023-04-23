@@ -49,7 +49,11 @@ class MongoPipeline:
     def __init__(self) -> None:
         """Initializes the MongoDB singleton class instance.
         """
-        self.db = MongoDBSingleton.get_instance()
+        try:
+            self.db = MongoDBSingleton.get_instance()
+        except pymongo.errors.ConnectionFailure:
+            # TODO: Implement proper error handling.
+            print("Database connection failed.")
 
     def process_item(self, item, spider):
         """Process the item. Check if a document using the same supplier ID and dataRef
@@ -69,16 +73,24 @@ class MongoPipeline:
 
 
 class DataTagPipeline:
+    """
+    Attach general tags to the data to uniquely separate it and make it
+    traceable.
+    """
 
     def process_item(self, item, spider):
         item['host'] = os.uname()[1]
         item['last_updated'] = datetime.now()
+        item['dataReferenceId'] = spider.name
         yield item
 
 from scrapy.exceptions import DropItem
 
 
 class ValidateProductFields:
+    """
+    Validates product fields to ensure certain required fields are present.
+    """
 
     def process_item(self, item, spider):
         """
