@@ -4,6 +4,7 @@
 # https://docs.scrapy.org/en/latest/topics/items.html
 
 import scrapy
+from scrapy.exceptions import DropItem
 
 
 class RawItem(scrapy.Item):
@@ -31,7 +32,8 @@ class DataReferenceTag(scrapy.Item):
     reference of where it was obtained.
     """
 
-    # The reference ID of the item.
+    # The reference ID of the item indicating which source crawler the item
+    # originated from.
     dataReferenceId = scrapy.Field()
 
     # The hostname the item was crawled from.
@@ -54,6 +56,9 @@ class ProductItem(DataReferenceTag):
     # The name of the item.
     name = scrapy.Field()
 
+    # A unique ID provided by the supplier.
+    supplierId = scrapy.Field()
+
     # Attribute values of the product which take the form "attributeName" and "attributeValue"
     # as well as "attributePid".
     attributeValues = scrapy.Field()
@@ -70,6 +75,25 @@ class ProductItem(DataReferenceTag):
 
     # The source URL of the product details.
     sourceUrl = scrapy.Field()
+
+    def validate(self):
+        """
+        Validates the ProductItem fields.
+        """
+        if self.name is None or not isinstance(self.name, str):
+            raise DropItem("Name must be a string!")
+        elif self.description is None or not isinstance(self.description, str):
+            raise DropItem("Description must be a string!")
+        elif self.productCategories is None or not isinstance(self.productCategories, list):
+            raise DropItem("Field 'productCategories' must be a list!")
+        elif self.attributeValues is None or not isinstance(self.attributeValues, list):
+            raise DropItem("Field 'attributeValues' must be a list!")
+        elif self.supplierId is None or not isinstance(self.supplierId, str):
+            raise DropItem("Field 'supplierId' must be a string!")
+        
+        for attr_val in self.attributeValues:
+            if 'attributeName' not in attr_val or 'attributeValue' not in attr_val:
+                raise DropItem(f"Attribute value ")
 
 
 class CleanedProduct(scrapy.Item):

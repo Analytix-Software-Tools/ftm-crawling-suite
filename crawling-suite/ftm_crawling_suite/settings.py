@@ -96,7 +96,7 @@ REQUEST_FINGERPRINTER_IMPLEMENTATION = '2.7'
 # TWISTED_REACTOR = 'twisted.internet.asyncioreactor.AsyncioSelectorReactor'
 
 # Set the output of crawled data to store it for reference.
-FEED_URI = 'data/%(name)s/%(time)s.json'
+# FEED_URI = 'data/%(name)s/%(time)s.json'
 
 # By default, format crawled data as JSON.
 FEED_FORMAT = 'json'

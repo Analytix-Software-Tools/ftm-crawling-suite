@@ -6,3 +6,4 @@ pyquery
 scrapy
 wheel
 scrapy-redis
+yaml
