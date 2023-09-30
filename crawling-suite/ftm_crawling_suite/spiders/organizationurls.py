@@ -1,44 +1,44 @@
+import uuid
 from abc import ABC
 
 import scrapy
-from scrapy.spiders import CrawlSpider
+from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
+from scrapy_redis.spiders import RedisCrawlSpider
+from ftm_crawling_suite.items import OrganizationHtml
 
 
-class OrganizationUrlsSpider(CrawlSpider):
+class OrganizationUrlsSpider(RedisCrawlSpider):
     """
-    Given the seed website URLs, indexes all URLs from a given website and
-    passes to the Mongo pipeline to be stored and scraped.
+    Polls redis for websites to crawl and extracts the content to mongo.
     """
-    name = 'diffbot'
-    allowed_domains = ['www.diffbot.com']
+    name = 'organizationurls'
+    collection = "organization_html"
     user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Safari/605.1.15"
-    start_urls = ['https://www.carmax.com/cars/all']
 
-    def __init__(self, **kwargs):
-        """
-        Initialize this spider with an instance of the MongoDB singleton as well as a
-        link extractor.
-        """
-        # self.db = MongoDBSingleton.get_instance()
-        super().__init__(**kwargs)
-        self.link_extractor = LinkExtractor(unique=True)
+    custom_settings = {
+        "ITEM_PIPELINES": {
+            "ftm_crawling_suite.pipelines.DataTagPipeline": 200,
+            "ftm_crawling_suite.pipelines.MongoPipeline": 400,
+        },
+        "DEPTH_LIMIT": 4,
+        "collection": "organization_html"
+    }
 
-    def start_requests(self):
-        """
-        Retrieves the URL seed for all organizations that exist.
-        """
-        organizations_collection = self.db.crawlingagent.organizations
-        organizations = organizations_collection.find({"siteUrl": {"$ne": None}, "isDeleted": {"$ne": True}})
-        if len(organizations) == 0:
-            return print("There are no organizations to be fetched.")
-        for organization in organizations:
-            yield scrapy.Request(url=organization["siteUrl"], callback=self.parse_item)
+    rules = [
+        Rule(callback="parse", follow=True)
+    ]
 
-    def parse_item(self, response):
-        """
-        After a request to the seed URL has been made, conduct a link extraction to retrieve
-        all URLs from the site, passing them into a pipeline.
-        """
-        for link in self.link_extractor.extract_links(response):
-            yield scrapy.Request(link.url, callback=self.parse)
+    def parse(self, response, **kwargs):
+        html = response.xpath('//body//text()').get()
+        # result_doc = OrganizationHtml()
+        # result_doc['domain'] = response.url
+        # result_doc['pageUrl'] = response.url
+        # result_doc['pid'] = str(uuid.uuid4())
+        # result_doc['rawHtml'] = html
+        yield {
+            "domain": response.url,
+            "pageUrl": response.url,
+            "pid": str(uuid.uuid4()),
+            "rawHtml": html
+        }

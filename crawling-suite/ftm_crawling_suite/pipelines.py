@@ -35,8 +35,7 @@ class MongoDBSingleton:
         else:
             mongo_uri_encoded = os.environ.get('MONGO_URI_PROD_ENCODED', 'bW9uZ29kYjovL2xvY2FsaG9zdDoyNzAxOQ==')
             mongo_uri = base64.b64decode(mongo_uri_encoded).decode('utf-8')
-            MongoDBSingleton.__instance = pymongo.MongoClient(mongo_uri_encoded)
-
+            MongoDBSingleton.__instance = pymongo.MongoClient(mongo_uri)
 
 
 class MongoPipeline:
@@ -44,13 +43,27 @@ class MongoPipeline:
     parsed data into the raw_data Mongo collection.
     """
 
-    collection_name = "scrapy_products"
-
-    def __init__(self) -> None:
-        """Initializes the MongoDB singleton class instance.
+    def __init__(self, db, mongo_collection) -> None:
         """
+        Initialize a new MongoPipeline instance.
+        """
+        self.db = db
+        self.collection = mongo_collection
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        """
+        Creates a new pipeline instance from the crawler which invokes the pipeline.
+        """
+        collection_name = crawler.settings.get("collection")
+        if collection_name is None:
+            raise Exception(f"Crawler {crawler.__class__} requires field 'collection' to be defined!")
         try:
-            self.db = MongoDBSingleton.get_instance()
+            analytix_db = MongoDBSingleton.get_instance()
+            return cls(
+                db=analytix_db,
+                mongo_collection=collection_name
+            )
         except pymongo.errors.ConnectionFailure:
             # TODO: Implement proper error handling.
             print("Database connection failed.")
@@ -60,16 +73,16 @@ class MongoPipeline:
         exists.
         """
         item_exists = False
-        exists = self.db['crawlingagent'][self.collection_name].find_one(
-                {"dataRef": item['dataRef'], "uniqueId": item['uniqueId']})
+        exists = self.db['crawlingagent'][self.collection].find_one(
+            {"dataRef": item['dataRef'], "uniqueId": item['uniqueId']})
         if exists is not None:
             item_exists = True
-            self.db['crawlingagent'][self.collection_name].replace_one(
+            self.db['crawlingagent'][self.collection].replace_one(
                 {"dataRef": item['dataRef'], "uniqueId": item['uniqueId']}, item
             )
         if not item_exists:
-            self.db['crawlingagent'][self.collection_name].insert_one(dict(item))
-        return item
+            self.db['crawlingagent'][self.collection].insert_one(dict(item))
+        yield item
 
 
 class DataTagPipeline:
@@ -83,6 +96,7 @@ class DataTagPipeline:
         item['last_updated'] = datetime.now()
         item['dataReferenceId'] = spider.name
         yield item
+
 
 from scrapy.exceptions import DropItem
 
@@ -105,4 +119,3 @@ class ValidateProductFields:
                 for attribute_value in field:
                     if not attribute_value['attributePid'] or not attribute_value['attributeValue']:
                         raise DropItem(f"Invalid attributeValue! Dropping item.")
-

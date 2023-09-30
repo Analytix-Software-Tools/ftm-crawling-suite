@@ -90,7 +90,7 @@ class ProductItem(DataReferenceTag):
             raise DropItem("Field 'attributeValues' must be a list!")
         elif self.supplierId is None or not isinstance(self.supplierId, str):
             raise DropItem("Field 'supplierId' must be a string!")
-        
+
         for attr_val in self.attributeValues:
             if 'attributeName' not in attr_val or 'attributeValue' not in attr_val:
                 raise DropItem(f"Attribute value ")
@@ -125,3 +125,13 @@ class CleanedProduct(scrapy.Item):
 
     # A field to store the original ID from the supplier.
     uniqueId = scrapy.Field()
+
+
+class OrganizationHtml(scrapy.Item):
+    """
+    Structure representing website text crawled from an organization website
+    URL, tagged by domain.
+    """
+    rawHtml = scrapy.Field()
+    domain = scrapy.Field()
+    pageUrl = scrapy.Field()

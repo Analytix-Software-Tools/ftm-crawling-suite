@@ -68,7 +68,12 @@ ROBOTSTXT_OBEY = False
 ITEM_PIPELINES = {
     'ftm_crawling_suite.pipelines.DataTagPipeline': 100,
     'ftm_crawling_suite.pipelines.MongoPipeline': 300,
+    'scrapy_redis.pipelines.RedisPipeline': 400
 }
+
+# ITEM_PIPELINES = {
+#     'scrapy_redis.pipelines.RedisPipeline': 300
+# }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
@@ -142,11 +147,6 @@ SCHEDULER_PERSIST = True
 # and may also block the same time when your spider start at the first time (because the queue is empty).
 #SCHEDULER_IDLE_BEFORE_CLOSE = 10
 
-# Store scraped item in redis for post-processing.
-ITEM_PIPELINES = {
-    'scrapy_redis.pipelines.RedisPipeline': 300
-}
-
 # The item pipeline serializes and stores the items in this redis key.
 #REDIS_ITEMS_KEY = '%(spider)s:items'
 
@@ -160,7 +160,7 @@ ITEM_PIPELINES = {
 
 # Specify the full Redis URL for connecting (optional).
 # If set, this takes precedence over the REDIS_HOST and REDIS_PORT settings.
-REDIS_URL_ENCODED = os.environ.get('REDIS_URI_ENCODED', 'cmVkaXM6Ly9jaHJpcy1hZG1pbjpQZ3Y0JWhIZjJHNCFAcmVkaXMtMTgyNTEuYzI0Ni51cy1lYXN0LTEtNC5lYzIuY2xvdWQucmVkaXNsYWJzLmNvbToxODI1MQ==')
+REDIS_URL_ENCODED = os.environ.get('REDIS_URI_ENCODED', 'cmVkaXM6Ly9sb2NhbGhvc3Q6NjM3OS8=')
 REDIS_URL = base64.b64decode(REDIS_URL_ENCODED).decode('utf-8')
 
 # Custom redis client parameters (i.e.: socket timeout, etc.)
