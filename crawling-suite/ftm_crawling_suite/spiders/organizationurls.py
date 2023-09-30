@@ -30,7 +30,7 @@ class OrganizationUrlsSpider(RedisCrawlSpider):
     ]
 
     def parse(self, response, **kwargs):
-        html = response.xpath('//body//text()').get()
+        html = response.xpath('//body').get()
         # result_doc = OrganizationHtml()
         # result_doc['domain'] = response.url
         # result_doc['pageUrl'] = response.url

@@ -107,7 +107,7 @@ REQUEST_FINGERPRINTER_IMPLEMENTATION = '2.7'
 FEED_FORMAT = 'json'
 
 # Default to the internal docker-compose URI.
-MONGO_URI_ENCODED = os.getenv('MONGO_URI_ENCODED', 'bW9uZ29kYitzcnY6Ly9hZG1pbjpla3kwUFF5TjNjZDcxV3dZQGNsdXN0ZXIwLmlsbHFoLm1vbmdvZGIubmV0')
+MONGO_URI_ENCODED = os.getenv('MONGO_URI_ENCODED', 'bW9uZ29kYitzcnY6Ly9hZG1pbjpla3kwUFF5TjNjZDcxV3dZQGNsdXN0ZXIwLmlsbHFoLm1vbmdvZGIubmV0Lw==')
 MONGO_URI = base64.b64decode(MONGO_URI_ENCODED).decode('utf-8')
 DEFAULT_DATABASE = "analytix"
 

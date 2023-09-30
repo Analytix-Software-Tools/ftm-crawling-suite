@@ -11,6 +11,7 @@ from datetime import datetime
 from itemadapter import ItemAdapter
 from pymongo import MongoClient
 from scrapy.exceptions import DropItem
+from socket import gethostname
 import base64
 import pymongo
 import os
@@ -33,7 +34,7 @@ class MongoDBSingleton:
         if MongoDBSingleton.__instance is not None:
             raise Exception("This class is a singleton!")
         else:
-            mongo_uri_encoded = os.environ.get('MONGO_URI_PROD_ENCODED', 'bW9uZ29kYjovL2xvY2FsaG9zdDoyNzAxOQ==')
+            mongo_uri_encoded = os.environ.get('MONGO_URI_PROD_ENCODED', 'bW9uZ29kYitzcnY6Ly9hZG1pbjpla3kwUFF5TjNjZDcxV3dZQGNsdXN0ZXIwLmlsbHFoLm1vbmdvZGIubmV0Lw==')
             mongo_uri = base64.b64decode(mongo_uri_encoded).decode('utf-8')
             MongoDBSingleton.__instance = pymongo.MongoClient(mongo_uri)
 
@@ -57,7 +58,7 @@ class MongoPipeline:
         """
         collection_name = crawler.settings.get("collection")
         if collection_name is None:
-            raise Exception(f"Crawler {crawler.__class__} requires field 'collection' to be defined!")
+            raise Exception(f"Crawler {crawler.__class__} requires field 'collection' to be defined in CUSTOM_SETTINGS!")
         try:
             analytix_db = MongoDBSingleton.get_instance()
             return cls(
@@ -73,16 +74,16 @@ class MongoPipeline:
         exists.
         """
         item_exists = False
-        exists = self.db['crawlingagent'][self.collection].find_one(
-            {"dataRef": item['dataRef'], "uniqueId": item['uniqueId']})
+        exists = self.db['analytix-scrapy'][self.collection].find_one(
+            {"dataRef": item['dataRef'], "pid": item['pid']})
         if exists is not None:
             item_exists = True
-            self.db['crawlingagent'][self.collection].replace_one(
-                {"dataRef": item['dataRef'], "uniqueId": item['uniqueId']}, item
+            self.db['analytix-scrapy'][self.collection].replace_one(
+                {"dataRef": item['dataRef'], "pid": item['pid']}, item
             )
         if not item_exists:
             self.db['crawlingagent'][self.collection].insert_one(dict(item))
-        yield item
+        return item
 
 
 class DataTagPipeline:
@@ -92,10 +93,10 @@ class DataTagPipeline:
     """
 
     def process_item(self, item, spider):
-        item['host'] = os.uname()[1]
+        item['host'] = gethostname()
         item['last_updated'] = datetime.now()
-        item['dataReferenceId'] = spider.name
-        yield item
+        item['dataRef'] = spider.name
+        return item
 
 
 from scrapy.exceptions import DropItem
