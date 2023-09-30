@@ -7,7 +7,19 @@ from scrapy import signals
 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
+from scrapy.spidermiddlewares.offsite import OffsiteMiddleware
+from scrapy.utils.httpobj import urlparse_cached
 
+
+class FtmOffsiteMiddleware(OffsiteMiddleware):
+    """
+    Prevent unnecessary requests triggered by following offsite URLs.
+    """
+
+    def should_follow(self, request, spider):
+        regex = self.get_host_regex(spider)
+        host = urlparse_cached(request).hostname or ""
+        return bool(regex.search(host))
 
 class FtmCrawlingSuiteSpiderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
