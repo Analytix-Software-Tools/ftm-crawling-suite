@@ -34,13 +34,16 @@ class DataReferenceTag(scrapy.Item):
 
     # The reference ID of the item indicating which source crawler the item
     # originated from.
-    dataReferenceId = scrapy.Field()
+    dataRef = scrapy.Field()
 
     # The hostname the item was crawled from.
-    hostname = scrapy.Field()
+    host = scrapy.Field()
 
     # The datetime the item was updated or added.
     last_updated = scrapy.Field()
+
+    # Unique identifier.
+    pid = scrapy.Field()
 
 
 class ProductItem(DataReferenceTag):
@@ -127,11 +130,12 @@ class CleanedProduct(scrapy.Item):
     uniqueId = scrapy.Field()
 
 
-class OrganizationHtml(scrapy.Item):
+class OrganizationHtml(DataReferenceTag):
     """
     Structure representing website text crawled from an organization website
     URL, tagged by domain.
     """
-    rawHtml = scrapy.Field()
+    string = scrapy.Field()
     domain = scrapy.Field()
-    pageUrl = scrapy.Field()
+    sourceUrl = scrapy.Field()
+    index = scrapy.Field()

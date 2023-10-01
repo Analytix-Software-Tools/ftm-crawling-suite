@@ -7,6 +7,7 @@
 # useful for handling different item types with a single interface
 import datetime
 import os
+import uuid
 from datetime import datetime
 from itemadapter import ItemAdapter
 from pymongo import MongoClient
@@ -34,7 +35,7 @@ class MongoDBSingleton:
         if MongoDBSingleton.__instance is not None:
             raise Exception("This class is a singleton!")
         else:
-            mongo_uri_encoded = os.environ.get('MONGO_URI_PROD_ENCODED', 'bW9uZ29kYitzcnY6Ly9hZG1pbjpla3kwUFF5TjNjZDcxV3dZQGNsdXN0ZXIwLmlsbHFoLm1vbmdvZGIubmV0Lw==')
+            mongo_uri_encoded = os.environ.get('MONGO_URI_PROD_ENCODED', 'bW9uZ29kYjovL2xvY2FsaG9zdDoyNzAxNy8=')
             mongo_uri = base64.b64decode(mongo_uri_encoded).decode('utf-8')
             MongoDBSingleton.__instance = pymongo.MongoClient(mongo_uri)
 
@@ -96,6 +97,7 @@ class DataTagPipeline:
         item['host'] = gethostname()
         item['last_updated'] = datetime.now()
         item['dataRef'] = spider.name
+        item['pid'] = str(uuid.uuid4())
         return item
 
 

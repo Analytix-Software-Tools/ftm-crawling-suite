@@ -5,6 +5,7 @@ from scrapy.exceptions import CloseSpider, DontCloseSpider
 from scrapy.spiders import Rule
 from scrapy.dupefilters import RFPDupeFilter
 from scrapy import Request
+from ftm_crawling_suite.items import OrganizationHtml
 import pymongo
 import re
 
@@ -18,19 +19,22 @@ class AltDupeFilter(RFPDupeFilter):
 class OrganizationHtmlSpider(CrawlSpider):
     allowed_domains = []
     name = 'organizationurls2'
+
     custom_settings = {
         "ITEM_PIPELINES": {
-            "crawler.pipelines.DataTagPipeline": 200,
-            "crawler.pipelines.MongoPipeline": 300
+            "ftm_crawling_suite.pipelines.DataTagPipeline": 200,
+            "ftm_crawling_suite.pipelines.MongoPipeline": 300
         },
         "SPIDER_MIDDLEWARES": {
-            'crawler.middlewares.FtmOffsiteMiddleware': 500,
+            'ftm_crawling_suite.middlewares.FtmOffsiteMiddleware': 500,
             'scrapy.spidermiddlewares.offsite.OffsiteMiddleware': None,
 
         },
-        "DUPEFILTER_CLASS": "ftm_crawling_suite.spiders.capability_spider.AltDupeFilter",
+        'CONCURRENT_REQUESTS': 300,
+        "DUPEFILTER_CLASS": "ftm_crawling_suite.spiders.organizationurls2.AltDupeFilter",
         "SCHEDULER_QUEUE_CLASS": "ftm_crawling_suite.queues.AltQueue",
-        "DEPTH_LIMIT": 4
+        "DEPTH_LIMIT": None,
+        "collection": "organization_html"
     }
     rules = [
         Rule(callback="parse_item", follow=True)
@@ -93,7 +97,7 @@ class OrganizationHtmlSpider(CrawlSpider):
             text = re.sub(' +', ' ', text)
             text = text.replace('\t', '')
             text = text.replace('\n', '')
-            item = CompanyWebsiteStringItem()
+            item = OrganizationHtml()
             item['domain'] = self.allowed_domains[0]
             item['sourceUrl'] = response.request.url
             item['string'] = text
@@ -111,5 +115,5 @@ class OrganizationHtmlSpider(CrawlSpider):
         valid = self.pop_redis()
         if valid is not None:
             self.crawler.engine.slot.scheduler.df.fingerprints = set()
-            self.crawler.engine.crawl(valid, self)
+            self.crawler.engine.crawl(valid)
         raise DontCloseSpider('Awaiting new URLs in redis...')
