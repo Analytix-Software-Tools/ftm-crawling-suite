@@ -24,6 +24,7 @@ crawling-suite/venv
 *.egg
 *.cpython
 __pycache__
+dist
 
 # Ignore scrapyd process logs
 *.pid

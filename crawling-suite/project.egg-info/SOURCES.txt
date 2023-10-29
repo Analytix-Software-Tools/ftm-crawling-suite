@@ -3,10 +3,14 @@ ftm_crawling_suite/__init__.py
 ftm_crawling_suite/items.py
 ftm_crawling_suite/middlewares.py
 ftm_crawling_suite/pipelines.py
+ftm_crawling_suite/queues.py
 ftm_crawling_suite/settings.py
 ftm_crawling_suite/spiders/__init__.py
+ftm_crawling_suite/spiders/general.py
 ftm_crawling_suite/spiders/nissan.py
 ftm_crawling_suite/spiders/organizationurls.py
+ftm_crawling_suite/spiders/organizationurls2.py
+ftm_crawling_suite/spiders/spider.py
 project.egg-info/PKG-INFO
 project.egg-info/SOURCES.txt
 project.egg-info/dependency_links.txt
