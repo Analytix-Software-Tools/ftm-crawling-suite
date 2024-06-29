@@ -1,5 +1,7 @@
 .idea
 
+manifests/secrets.yaml
+
 # Ignore environment files
 .env
 venv/*

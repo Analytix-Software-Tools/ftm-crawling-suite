@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scrapyd
+spec:
+  replicas:  {{ .Values.daemonCount | default 1 }} # Scale number of daemons
+  selector:
+    matchLabels:
+      app: scrapy
+  template:
+    metadata:
+      labels:
+        app: scrapy
+    spec:
+      containers:
+      - name: scrapy
+        image: cr2244/scrapyd:latest
+#        args: ["crawl", "your_spider_name"] # Replace with your Scrapy command
+        resources:
+          limits:
+            memory: {{ .Values.memoryLimit }}
+            cpu: {{ .Values.cpuLimit }}
+          requests:
+            memory: {{ .Values.memoryRequest }}
+            cpu: {{ .Values.cpuRequest }}
+        env:
+        - name: SCRAPY_SETTINGS_MODULE
+          value: "ftm_crawling_suite.settings" # Replace with your Scrapy settings module
+        volumeMounts:
+          - name: scrapyd-data
+            mountPath: /var/lib/scrapyd
+          - name: scrapy-projects
+            mountPath: /usr/local/projects
+      imagePullSecrets:
+        - name: analytix-registry-secret
+      volumes:
+        - name: scrapyd-data
+          hostPath:
+            path: /path/to/local/scrapyd/data
+            type: Directory
+        - name: scrapy-projects
+          hostPath:
+            path: /path/to/local/projects
+            type: Directory
