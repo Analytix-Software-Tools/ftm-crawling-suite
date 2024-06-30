@@ -160,7 +160,7 @@ SCHEDULER_PERSIST = True
 
 # Specify the full Redis URL for connecting (optional).
 # If set, this takes precedence over the REDIS_HOST and REDIS_PORT settings.
-REDIS_URL_ENCODED = os.environ.get('REDIS_URI_ENCODED', 'cmVkaXM6Ly9sb2NhbGhvc3Q6NjM3OS8=')
+REDIS_URL_ENCODED = os.environ.get('REDIS_URL_ENCODED', 'cmVkaXM6Ly9sb2NhbGhvc3Q6NjM3OS8=')
 REDIS_URL = base64.b64decode(REDIS_URL_ENCODED).decode('utf-8')
 
 # Custom redis client parameters (i.e.: socket timeout, etc.)
