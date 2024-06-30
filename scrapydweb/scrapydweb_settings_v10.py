@@ -37,11 +37,13 @@ PASSWORD = os.getenv("PASSWORD", 'admin')
 #   - it's recommended to pass in a tuple of 5 elements.
 #   - e.g. ('', '', '127.0.0.1', '6800', '') or ('username', 'password', 'localhost', '6801', 'group')
 SCRAPYD_SERVERS = [
-    'scrapyd:6800',
-    # 'analytix-scrapyd-0.azurewebsites.net'
+    ('', '', 'scrapyd-1-svc', '6800', 'organizationhtml2'),
+    ('', '', 'scrapyd-2-svc', '6800', 'organizationhtml2'),
+    ('', '', 'scrapyd-3-svc', '6800', 'organizationhtml2'),
     # 'username:password@localhost:6801#group',
-    # ('username', 'password', 'localhost', '6801', 'group'),
+    # ('username', 'password', 'localhost', '6802', 'group'),
 ]
+
 # SCRAPYD_SERVERS = os.getenv("SCRAPYD_SERVERS").split(',')
 
 # It's recommended to update the three options below

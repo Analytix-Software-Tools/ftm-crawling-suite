@@ -1,4 +1,4 @@
-FROM python:3.6-slim
+FROM python:3.6
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt update && apt install git -y

@@ -63,7 +63,7 @@ metadata:
     name: scrapyd-{{ . }}-pvc
     namespace: scrapy
     labels:
-        app: scrapyd
+        app: scrapyd-{{ . }}
 spec:
     accessModes:
         - ReadWriteOnce
@@ -82,7 +82,7 @@ metadata:
     name: scrapyd-{{ . }}-svc
     namespace: scrapy
     labels:
-        app: scrapyd
+        app: scrapyd-{{ . }}
 spec:
     ports:
         - port: {{ $scrapydPort | default 6800 | int }}
@@ -90,7 +90,7 @@ spec:
           protocol: TCP
     type: NodePort
     selector:
-        app: scrapyd
+        app: scrapyd-{{ . }}
 ---
 {{- end }}
 
