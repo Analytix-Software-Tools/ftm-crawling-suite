@@ -20,11 +20,11 @@ spec:
           name: redis
         resources:
           requests:
-            memory: "128Mi"
-            cpu: "100m"
+            cpu: "0.3"
+            memory: "2Gi"
           limits:
-            memory: "256Mi"
-            cpu: "250m"
+            cpu: "0.5"
+            memory: "4Gi"
         volumeMounts:
         - name: redis-data
           mountPath: /data
