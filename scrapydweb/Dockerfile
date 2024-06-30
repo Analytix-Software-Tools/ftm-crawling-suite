@@ -1,23 +1,16 @@
-FROM python:3.10-slim
+FROM python:3.6-slim
 
 ENV DEBIAN_FRONTEND noninteractive
-
 RUN apt update && apt install git -y
 
-ADD . /app
+RUN mkdir /app
 WORKDIR /app
 
 COPY requirements.txt .
 COPY scrapydweb_settings_v10.py .
+RUN python3 -m pip install --upgrade git+https://github.com/my8100/scrapydweb.git
+RUN python3 -m pip install -r requirements.txt
 
-RUN apt-get update && \ 
-  apt-get install -y git && \
-  pip3 install -U git+https://github.com/my8100/scrapydweb.git && \
-  apt-get remove -y git
 
-RUN pip3 install -r requirements.txt
 
-EXPOSE 5000
-ENV PORT 80:5000
-
-CMD scrapydweb
+ENTRYPOINT ["scrapydweb"]
