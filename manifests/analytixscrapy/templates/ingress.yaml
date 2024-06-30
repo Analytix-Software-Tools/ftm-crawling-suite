@@ -13,6 +13,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: minio-svc
+            name: scrapyd-web-svc
             port:
-              number: 9001
+              number: 80
