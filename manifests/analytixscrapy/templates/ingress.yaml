@@ -15,4 +15,4 @@ spec:
           service:
             name: minio-svc
             port:
-              number: 9000
+              number: 9001

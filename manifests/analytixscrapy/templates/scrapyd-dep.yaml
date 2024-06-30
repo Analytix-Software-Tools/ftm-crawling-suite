@@ -36,9 +36,9 @@ spec:
       volumes:
         - name: scrapyd-data
           hostPath:
-            path: /path/to/local/scrapyd/data
+            path: /usr/share/scrapyd/data
             type: Directory
         - name: scrapy-projects
           hostPath:
-            path: /path/to/local/projects
+            path: /usr/share/scrapyd/projects
             type: Directory
