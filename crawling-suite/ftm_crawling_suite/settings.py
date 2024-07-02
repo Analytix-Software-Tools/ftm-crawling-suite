@@ -111,7 +111,7 @@ AWS_SECRET_ACCESS_KEY = os.getenv('AWS_ACCESS_SECRET', '')
 AWS_ENDPOINT_URL = 'http://localhost:9000'
 
 # s3pipeline library settings
-S3PIPELINE_URL = 's3://admin:minio123@organizationhtml.localhost:9000/{name}/{time}/items.{chunk:07d}.jl.gz'
+S3PIPELINE_URL = 's3://admin:minio123@organizationhtml.minio-api-svc:9000/{name}/{time}/items.{chunk:07d}.jl.gz'
 
 # Default to the internal docker-compose URI.
 MONGO_URI_ENCODED = os.getenv('MONGO_URI_ENCODED', 'bW9uZ29kYitzcnY6Ly9hZG1pbjpla3kwUFF5TjNjZDcxV3dZQGNsdXN0ZXIwLmlsbHFoLm1vbmdvZGIubmV0')
