@@ -22,6 +22,3 @@ class S3Spider(CrawlSpider):
         "SCHEDULER_QUEUE_CLASS": "ftm_crawling_suite.queues.AltQueue",
         "DEPTH_LIMIT": None
     }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(args, kwargs)
