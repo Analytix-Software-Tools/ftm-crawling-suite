@@ -34,6 +34,8 @@ spec:
         ports:
         - containerPort: 9001
           hostPort: 9001
+        - containerPort: 9000
+          hostPort: 9000
         volumeMounts:
           - name: minio-storage
             mountPath: "/storage"

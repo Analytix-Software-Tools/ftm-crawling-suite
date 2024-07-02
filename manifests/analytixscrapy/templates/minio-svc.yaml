@@ -11,3 +11,17 @@ spec:
       port: 9001
       targetPort: 9001
   type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio-api-svc
+  namespace: scrapy
+spec:
+  selector:
+    app: minio
+  ports:
+    - protocol: TCP
+      port: 9000
+      targetPort: 9000
+  type: NodePort
