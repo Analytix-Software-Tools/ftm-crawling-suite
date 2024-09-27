@@ -1,3 +1,6 @@
+import os
+import base64
+
 # Scrapy settings for ftm_crawling_suite project
 #
 # For simplicity, this file contains only settings considered important or
@@ -62,8 +65,14 @@ ROBOTSTXT_OBEY = False
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
+ITEM_PIPELINES = {
+    'ftm_crawling_suite.pipelines.DataTagPipeline': 100,
+    'ftm_crawling_suite.pipelines.MongoPipeline': 300,
+    'scrapy_redis.pipelines.RedisPipeline': 400
+}
+
 # ITEM_PIPELINES = {
-#    'ftm_crawling_suite.pipelines.FtmCrawlingSuitePipeline': 100,
+#     'scrapy_redis.pipelines.RedisPipeline': 300
 # }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -89,10 +98,90 @@ ROBOTSTXT_OBEY = False
 
 # Set settings whose default value is deprecated to a future-proof value
 REQUEST_FINGERPRINTER_IMPLEMENTATION = '2.7'
-TWISTED_REACTOR = 'twisted.internet.asyncioreactor.AsyncioSelectorReactor'
+# TWISTED_REACTOR = 'twisted.internet.asyncioreactor.AsyncioSelectorReactor'
 
 # Set the output of crawled data to store it for reference.
-FEED_URI = 'data/%(name)s/%(time)s.json'
+# FEED_URI = 'data/%(name)s/%(time)s.json'
 
 # By default, format crawled data as JSON.
-FEED_FORMAT = 'json'
+FEED_FORMAT = 'jsonlines'
+
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY', '')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_ACCESS_SECRET', '')
+AWS_ENDPOINT_URL = 'http://localhost:9000'
+
+# s3pipeline library settings
+S3PIPELINE_URL = 's3://admin:minio123@organizationhtml.minio-api-svc:9000/{name}/{time}/items.{chunk:07d}.jl.gz'
+
+# Default to the internal docker-compose URI.
+MONGO_URI_ENCODED = os.getenv('MONGO_URI_ENCODED', 'bW9uZ29kYitzcnY6Ly9hZG1pbjpla3kwUFF5TjNjZDcxV3dZQGNsdXN0ZXIwLmlsbHFoLm1vbmdvZGIubmV0')
+MONGO_URI = base64.b64decode(MONGO_URI_ENCODED).decode('utf-8')
+DEFAULT_DATABASE = "analytix"
+
+
+"""
+Redis Configuration
+"""
+
+# Enables scheduling storing requests queue in redis.
+SCHEDULER = "scrapy_redis.scheduler.Scheduler"
+
+# Ensure all spiders share same duplicates filter through redis.
+DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
+
+# Default requests serializer is pickle, but it can be changed to any module
+# with loads and dumps functions. Note that pickle is not compatible between
+# python versions.
+# Caveat: In python 3.x, the serializer must return strings keys and support
+# bytes as values. Because of this reason the json or msgpack module will not
+# work by default. In python 2.x there is no such issue and you can use
+# 'json' or 'msgpack' as serializers.
+#SCHEDULER_SERIALIZER = "scrapy_redis.picklecompat"
+
+# Don't cleanup redis queues, allows to pause/resume crawls.
+# NOTE: Should manually clean queues and schedule full re-crawl 1x per month or so.
+SCHEDULER_PERSIST = True
+
+# Schedule requests using a priority queue. (default)
+#SCHEDULER_QUEUE_CLASS = 'scrapy_redis.queue.PriorityQueue'
+
+# Alternative queues.
+#SCHEDULER_QUEUE_CLASS = 'scrapy_redis.queue.FifoQueue'
+#SCHEDULER_QUEUE_CLASS = 'scrapy_redis.queue.LifoQueue'
+
+# Max idle time to prevent the spider from being closed when distributed crawling.
+# This only works if queue class is SpiderQueue or SpiderStack,
+# and may also block the same time when your spider start at the first time (because the queue is empty).
+#SCHEDULER_IDLE_BEFORE_CLOSE = 10
+
+# The item pipeline serializes and stores the items in this redis key.
+#REDIS_ITEMS_KEY = '%(spider)s:items'
+
+# The items serializer is by default ScrapyJSONEncoder. You can use any
+# importable path to a callable object.
+#REDIS_ITEMS_SERIALIZER = 'json.dumps'
+
+# Specify the host and port to use when connecting to Redis (optional).
+#REDIS_HOST = 'localhost'
+#REDIS_PORT = 6379
+
+# Specify the full Redis URL for connecting (optional).
+# If set, this takes precedence over the REDIS_HOST and REDIS_PORT settings.
+REDIS_URL_ENCODED = os.environ.get('REDIS_URL_ENCODED', 'cmVkaXM6Ly9sb2NhbGhvc3Q6NjM3OS8=')
+REDIS_URL = base64.b64decode(REDIS_URL_ENCODED).decode('utf-8')
+
+# Custom redis client parameters (i.e.: socket timeout, etc.)
+#REDIS_PARAMS  = {}
+# Use custom redis client class.
+#REDIS_PARAMS['redis_cls'] = 'myproject.RedisClient'
+
+# If True, it uses redis' ``spop`` operation. This could be useful if you
+# want to avoid duplicates in your start urls list. In this cases, urls must
+# be added via ``sadd`` command or you will get a type error from redis.
+#REDIS_START_URLS_AS_SET = False
+
+# Default start urls key for RedisSpider and RedisCrawlSpider.
+#REDIS_START_URLS_KEY = '%(name)s:start_urls'
+
+# Use other encoding than utf-8 for redis.
+#REDIS_ENCODING = 'latin1'

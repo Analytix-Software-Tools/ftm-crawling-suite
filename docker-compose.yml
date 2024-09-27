@@ -1,0 +1,23 @@
+version: "1.0.0"
+services:
+  scrapydweb:
+    image: "webclient"
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./scrapydweb/data/scrapydweb_data:/usr/local/lib/python3.10/site-packages/scrapydweb/data \
+      - /etc/timezone:/etc/timezone \
+    environment:
+      - USERNAME=scrapydweb
+      - PASSWORD=rootpassword
+  scrapyd:
+    image: "scrapydaemon"
+    ports:
+      - "6800:6800"
+    volumes:
+      - ./scrapyd/data:/var/lib/scrapyd
+      - ./projects:/usr/local/projects
+      - /usr/local/lib/pythovenvn3.9/dist-packages
+    restart: unless-stopped
+
+

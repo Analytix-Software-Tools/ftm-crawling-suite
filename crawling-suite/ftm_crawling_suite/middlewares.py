@@ -7,7 +7,19 @@ from scrapy import signals
 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
+from scrapy.spidermiddlewares.offsite import OffsiteMiddleware
+from scrapy.utils.httpobj import urlparse_cached
 
+
+class FtmOffsiteMiddleware(OffsiteMiddleware):
+    """
+    Prevent unnecessary requests triggered by following offsite URLs.
+    """
+
+    def should_follow(self, request, spider):
+        regex = self.get_host_regex(spider)
+        host = urlparse_cached(request).hostname or ""
+        return bool(regex.search(host))
 
 class FtmCrawlingSuiteSpiderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
@@ -60,6 +72,11 @@ class FtmCrawlingSuiteDownloaderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
+
+    """
+    The downloader middleware will check against the redis cache to ensure
+    the URL has not already been crawled against.
+    """
 
     @classmethod
     def from_crawler(cls, crawler):

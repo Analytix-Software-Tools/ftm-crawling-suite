@@ -1,0 +1,96 @@
+{{- $scrapydRepository  := .Values.scrapyd.repoUrl -}}
+{{- $scrapydDepVersion  := .Values.scrapyd.version -}}
+{{- $scrapydPort  := .Values.scrapyd.port -}}
+{{- range untilStep 1 (.Values.scrapyd.daemonCount | add 1 | int) 1 }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: scrapyd-{{ . }}
+    namespace: scrapy
+    labels:
+        app: scrapyd-{{ . }}
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: scrapyd-{{ . }}
+    template:
+        metadata:
+            labels:
+                app: scrapyd-{{ . }}
+        spec:
+            containers:
+                - name: scrapyd
+                  image: {{ $scrapydRepository | default "cr2244/scrapyd"}}:{{ $scrapydDepVersion | default "latest"}}
+                  ports:
+                      - containerPort: {{ $scrapydPort | default 6800 | int }}
+                        name: scrapyd-{{ . }}-port
+                  env:
+                      - name: MONGO_URI_ENCODED
+                        valueFrom:
+                            secretKeyRef:
+                                name: scrapy-secrets
+                                key: mongo-uri-encoded
+                      - name: REDIS_URL_ENCODED
+                        valueFrom:
+                            secretKeyRef:
+                                name: scrapy-secrets
+                                key: redis-url-encoded
+                      - name: AWS_ACCESS_KEY
+                        valueFrom:
+                            secretKeyRef:
+                                name: scrapy-secrets
+                                key: aws-access-key
+                      - name: AWS_ACCESS_SECRET
+                        valueFrom:
+                            secretKeyRef:
+                                name: scrapy-secrets
+                                key: aws-access-secret
+                  volumeMounts:
+                      - mountPath: /var/lib/scrapyd
+                        name: data
+            volumes:
+                - name: data
+                  persistentVolumeClaim:
+                      claimName: scrapyd-{{ . }}-pvc
+---
+{{- end }}
+{{- range untilStep 1 (.Values.scrapyd.daemonCount | add 1 | int) 1 }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+    name: scrapyd-{{ . }}-pvc
+    namespace: scrapy
+    labels:
+        app: scrapyd-{{ . }}
+spec:
+    accessModes:
+        - ReadWriteOnce
+    resources:
+        requests:
+            storage: 10Gi
+#    storageClassName: useast-storageclas
+---
+{{- end }}
+{{- $scrapydPort  := .Values.scrapyd.port -}}
+{{- range untilStep 1 (.Values.scrapyd.daemonCount | add 1 | int) 1 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: scrapyd-{{ . }}-svc
+    namespace: scrapy
+    labels:
+        app: scrapyd-{{ . }}
+spec:
+    ports:
+        - port: {{ $scrapydPort | default 6800 | int }}
+          targetPort: scrapyd-{{ . }}-port
+          protocol: TCP
+    type: NodePort
+    selector:
+        app: scrapyd-{{ . }}
+---
+{{- end }}
+

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-deployment
+  namespace: scrapy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+      - name: mongo
+        image: cr2244/scrapymongo
+        args: ["--auth"]
+        env:
+          - name: MONGO_INITDB_DATABASE
+            value: "analytix_scrapy"
+          - name: MONGO_INITDB_ROOT_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mongo-secret
+                key: mongo-root-username
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mongo-secret
+                key: mongo-root-password
+        ports:
+        - containerPort: 27017
+          name: mongo
+        resources:
+          requests:
+            memory: "2.5Gi"
+          limits:
+            memory: "3Gi"
+        volumeMounts:
+        - name: mongo-data
+          mountPath: /data/db
+      volumes:
+      - name: mongo-data
+        persistentVolumeClaim:
+         claimName: mongo-pvc

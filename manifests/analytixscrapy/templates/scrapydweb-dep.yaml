@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: scrapyd-web
+    namespace: scrapy
+    labels:
+        app: scrapy
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: scrapy
+    template:
+        metadata:
+            labels:
+                app: scrapy
+        spec:
+            imagePullSecrets:
+              - name: analytix-registry-secret
+            containers:
+                - name: scrapyd-web
+                  image: cr2244/scrapydweb
+                  imagePullPolicy: Always
+                  ports:
+                      - containerPort: 5000
+                        name: scrapyd-web
+                  volumeMounts:
+                      - mountPath: /var/lib/scrapyd
+                        name: data
+            volumes:
+                - name: data
+                  persistentVolumeClaim:
+                      claimName: scrapyd-web-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: scrapyd-web-svc
+    namespace: scrapy
+spec:
+    ports:
+        - port: 80
+          targetPort: scrapyd-web
+          protocol: TCP
+    type: NodePort
+    selector:
+        app: scrapy
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+    name: scrapyd-web-pvc
+    namespace: scrapy
+spec:
+    accessModes:
+        - ReadWriteOnce
+    resources:
+        requests:
+            storage: 10Gi
+#    storageClassName: useast-storageclass

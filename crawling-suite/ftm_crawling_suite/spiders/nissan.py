@@ -2,7 +2,7 @@ import json
 import logging
 
 import scrapy
-from ftm_crawling_suite.items import RawDataRef
+from ftm_crawling_suite.items import RawItem
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.http import Request
 from scrapy.linkextractors import LinkExtractor
@@ -12,13 +12,6 @@ class NissanSpider(CrawlSpider):
     name = 'nissan'
     allowed_domains = ['nissanusa.com']
     start_urls = ['http://nissanusa.com/']
-    custom_settings = {
-        'ITEM_PIPELINES': {
-            'ftm_crawling_suite.pipelines.rawdataref.RawDataRefPipeline': 100,
-            'ftm_crawling_suite.pipelines.nissan.nissan.NissanDataCleaningPipeline': 200,
-            'ftm_crawling_suite.pipelines.cleanedproduct.CleanedProductPipeline': 300,
-        }
-    }
 
     rules = (
         Rule(LinkExtractor(allow=(), restrict_css=('div.c_310-1 a',)),
@@ -43,7 +36,7 @@ class NissanSpider(CrawlSpider):
                 for trim, version in vehicle_specs_raw['grades'].items():
                     # Append the trim as well as the category names in the list of fields.
                     for uid, product in version['versions'].items():
-                        raw_product = RawDataRef()
+                        raw_product = RawItem()
                         raw_product['dataRef'] = 'nissan-usa'
                         raw_product['collection'] = 'products'
                         raw_product['raw'] = product

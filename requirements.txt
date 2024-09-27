@@ -1,9 +1,10 @@
 pymongo
+scrapy-redis
+pymongo
 urllib3
 lxml
 apscheduler
 pyquery
 scrapy
 wheel
-scrapy-redis
-yaml
+logparser

@@ -28,4 +28,4 @@ with open('2022_titles_descriptions.tsv') as csvfile:
          except:
              continue
      print('inserting')
-     client['memorymaker'].industries.insert_many(new_industries)
+     client['analytix'].industries.insert_many(new_industries)

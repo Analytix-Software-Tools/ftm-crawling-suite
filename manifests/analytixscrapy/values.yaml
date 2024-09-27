@@ -1,0 +1,6 @@
+scrapyd:
+    imageVersion: "latest"
+    daemonCount: 3
+    repoUrl: "cr2244/scrapyd"
+    port: 6800
+

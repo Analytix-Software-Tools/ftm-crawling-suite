@@ -1,0 +1,9 @@
+logparser
+pymongo==4.3.3
+scrapy-redis
+botocore
+scrapy-s3pipeline[s3]
+python-scrapyd-api
+cloudscraper
+beautifulsoup4
+Scrapy==2.11.1
