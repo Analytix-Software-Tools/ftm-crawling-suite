@@ -9,7 +9,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: manual
+  storageClassName: {{ .Values.mongo.storageClassName | default "manual" }}
   hostPath:
     path: /mnt/data/mongo
     type: DirectoryOrCreate
@@ -24,5 +24,5 @@ spec:
   resources:
     requests:
       storage: 40Gi
-  storageClassName: manual
+  storageClassName: {{ .Values.mongo.storageClassName | default "manual" }}
 ---

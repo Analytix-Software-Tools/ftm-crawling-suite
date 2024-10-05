@@ -23,5 +23,5 @@ spec:
   resources:
     requests:
       storage: 4Gi
-  storageClassName: manual
+  storageClassName: {{ .Values.redis.storageClassName | default "manual" }}
 ---

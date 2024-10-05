@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: mongo
-        image: cr2244/scrapymongo
+        image: {{ .Values.mongo.spec.containers.image | default "cr2244/scrapymongo" }}
         args: ["--auth"]
         env:
           - name: MONGO_INITDB_DATABASE

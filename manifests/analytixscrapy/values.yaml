@@ -1,6 +1,21 @@
+ingressClassName: nginx
+
 scrapyd:
     imageVersion: "latest"
     daemonCount: 3
     repoUrl: "cr2244/scrapyd"
     port: 6800
 
+
+redis:
+    storageClassName: longhorn
+
+
+mongo:
+    storageClassName: longhorn
+    spec:
+        containers:
+            image: mongo # Default to cr2244/mongo for ARM64
+
+minio:
+    storageClassName: longhorn
