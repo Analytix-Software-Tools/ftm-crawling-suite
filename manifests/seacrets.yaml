@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mongo-secret
+  namespace: scrapy
+type: Opaque
+data:
+  mongo-root-username: Y2hyaXMtYWRtaW4=  # chris-admin
+  mongo-root-password: andWNmM4WjdJSGJG  # jwV6c8Z7IHbF
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: minio-creds
+  namespace: scrapy
+type: Opaque
+data:
+  accessKey: bWluaW8=  # minio
+  secretKey: TXdzcFZTdTEwZTQy  # MwspVSu10e42
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: scrapy-secrets
+  namespace: scrapy
+type: Opaque
+data:
+  mongo-uri-encoded: Ylc5dVoyOWtZam92TDJOb2NtbHpMV0ZrYldsdU9tcDNWalpqT0ZvM1NVaGlSa0J0YjI1bmJ5MXpkbU11YzJOeVlYQjVMbk4yWXk1amJIVnpkR1Z5TG14dlkyRnNPakkzTURFMw==
+  redis-url-encoded: Y21Wa2FYTTZMeTl5WldScGN5MXpkbU11YzJOeVlYQjVMbk4yWXk1amJIVnpkR1Z5TG14dlkyRnNPall6TnprPQ==
+  aws-access-key: bWluaW8=  # minio
+  aws-access-secret: TXdzcFZTdTEwZTQy  # MwspVSu10e42
+  aws-endpoint-url-encoded: YUhSMGNEb3ZMMjFwYm1sdkxXRndhUzF6ZG1NdWMyTnlZWEI1TG5OMll5NWpiSFZ6ZEdWeUxteHZZMkZzT2prd01EQT0=
