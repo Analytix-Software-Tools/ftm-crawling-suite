@@ -46,6 +46,11 @@ spec:
                             secretKeyRef:
                                 name: scrapy-secrets
                                 key: aws-access-secret
+                      - name: AWS_ENDPOINT_URL_ENCODED
+                        valueFrom:
+                          secretKeyRef:
+                            name: scrapy-secrets
+                            key: aws-endpoint-url-encoded
                   volumeMounts:
                       - mountPath: /var/lib/scrapyd
                         name: data
