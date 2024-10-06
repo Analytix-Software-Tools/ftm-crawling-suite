@@ -108,10 +108,11 @@ FEED_FORMAT = 'jsonlines'
 
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY', '')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_ACCESS_SECRET', '')
-AWS_ENDPOINT_URL = 'http://localhost:9000'
+AWS_ENDPOINT_URL_ENCODED = os.getenv('AWS_ENDPOINT_URL_ENCODED', 'aHR0cDovL2xvY2FsaG9zdDo5MDAw')
+AWS_ENDPOINT_URL = base64.b64decode(AWS_ENDPOINT_URL_ENCODED).decode('utf-8')
 
 # s3pipeline library settings
-S3PIPELINE_URL = 's3://admin:minio123@organizationhtml.minio-api-svc:9000/{name}/{time}/items.{chunk:07d}.jl.gz'
+S3PIPELINE_URL = 's3://minio:MwspVSu10e42@data-processing:9000/datasets/raw/website_html/{name}/{time}/items.{chunk:07d}.jl.gz'
 
 # Default to the internal docker-compose URI.
 MONGO_URI_ENCODED = os.getenv('MONGO_URI_ENCODED', 'bW9uZ29kYitzcnY6Ly9hZG1pbjpla3kwUFF5TjNjZDcxV3dZQGNsdXN0ZXIwLmlsbHFoLm1vbmdvZGIubmV0')
